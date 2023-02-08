@@ -12,3 +12,5 @@ if ARGV.empty?
 else
   puts ARGV[0].to_s
 end
+
+# https://mybin.domain4now.com/ruby_bins/2442/edit
