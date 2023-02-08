@@ -1,0 +1,23 @@
+https://mybin.domain4now.com/ruby_bins/2430/edit
+
+# frozen_string_literal: true
+
+# Using Ruby version: ruby 2.7.1p83 (2020-03-31 revision a0c7c23c9c) [x86_64-linux]
+class Fibonacci
+  def fibonacci(input)
+    first_num = second_num = 1
+    yield(first_num)
+    while second_num <= input.to_i
+      yield(second_num)
+      second_num += first_num
+      first_num = second_num - first_num
+    end
+  end
+end
+# Your Ruby code here
+fib = Fibonacci.new
+if ARGV.empty?
+  puts 'Please provide an input'
+else
+  fib.fibonacci(ARGV[0]) { |value| print "#{value} " }
+end
