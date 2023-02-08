@@ -3,14 +3,15 @@ https://mybin.domain4now.com/ruby_bins/2426/edit
 # frozen_string_literal: true
 
 # Using Ruby version: ruby 2.7.1p83 (2020-03-31 revision a0c7c23c9c) [x86_64-linux]
-class String
-  def to_s
-    swapcase
+class Replace
+  def replacement(input)
+    input.gsub(/[aeiou]/, '*')
   end
 end
-# Your Ruby code
+# Your Ruby code here
+replace_regex = Replace.new
 if ARGV.empty?
   puts 'Please provide an input'
 else
-  puts ARGV[0].to_s
+  puts replace_regex.replacement(ARGV[0])
 end
