@@ -1,3 +1,5 @@
+# https://mybin.domain4now.com/ruby_bins/2442/edit
+
 # frozen_string_literal: true
 
 # Using Ruby version: ruby 2.7.1p83 (2020-03-31 revision a0c7c23c9c) [x86_64-linux]
@@ -12,5 +14,3 @@ if ARGV.empty?
 else
   puts ARGV[0].to_s
 end
-
-# https://mybin.domain4now.com/ruby_bins/2442/edit
