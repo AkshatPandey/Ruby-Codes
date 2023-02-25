@@ -1,0 +1,98 @@
+class InputError < StandardError
+end
+class Product
+  SALESTAX = 0.1
+  IMPORTDUTY = 0.05
+  REGEX = /^yes|no$/
+  def get_product
+    print 'Name of the product: '
+    @name = gets.chomp
+    print 'Imported?: ' 
+    @imported = gets.chomp.downcase
+    raise InputError, 'Wrong Input!! Please enter \'yes\' or \'no\' only!' unless REGEX.match?(@imported)
+    print 'Exempted from sales tax?: '
+    @exempted = gets.chomp.downcase
+    raise InputError, 'Wrong Input!! Please enter \'yes\' or \'no\' only!' unless REGEX.match?(@exempted)
+    print 'Price: '
+    @price = Float(gets.chomp)
+    @tax = get_tax
+    [@name, @imported, @exempted, @price, @tax]
+  end
+
+  def get_tax
+    tax = TaxCalculator.new(@imported, @exempted, @price)
+    tax.calculate_tax
+  end
+end
+
+class TaxCalculator
+  SALESTAX = 0.1
+  IMPORTDUTY = 0.05
+  def initialize(imported,exempted, price)
+    @imported = imported
+    @exempted = exempted
+    @price = price
+  end
+
+  def imported?
+    'yes'.match?(@imported)
+  end
+
+  def exempted?
+    'yes'.match?(@exempted)
+  end
+
+  def calculate_tax
+    if imported? && exempted?
+      tax = @price * SALESTAX
+    elsif imported? && !exempted?
+      tax = @price * (SALESTAX + IMPORTDUTY)
+    elsif !imported? && !exempted?
+      tax = @price * IMPORTDUTY
+    else
+      tax = 0
+    end
+    tax.round(2)
+  end
+end
+
+class Cart
+  def add_product
+    @amount = 0
+    @hash = Hash.new {|hash,key| hash[key] = []}
+    loop do
+      p = Product.new.get_product
+      @hash[p[0]] << p[1] << p[2] << p[3] << p[4]
+      print 'Do you want to add more items to your list(y/n): '
+      break if gets.chomp.downcase == 'n'
+    end
+    @hash.each_value do |value|
+      @amount += value[2] + value[3]
+    end
+    DisplayBill.new.display(@hash,@amount.round)
+  end
+end
+
+class DisplayBill
+  def display(hash, amount)
+    system("cls")
+    print '-' * 83,"\n"
+    print 'Item' + ' ' * 20 + 'Price' +' ' * 20 + 'Tax' +' ' * 20  + 'Total Price', "\n"
+    print '-' * 83,"\n"
+    hash.each do |key,value|
+      print key, " " * (24-key.length), value[2], " " * (25-value[2].to_s.length)
+      print value[3], " " * (23 - value[3].to_s.length), value[2]+value[3], "\n"
+    end
+    print '-' * 83,"\n"
+    print 'Total amount to be paid =',' ' * (83-24-12) ,amount.to_f,"\n"
+    print '-' * 83,"\n"
+  end
+end
+      
+begin
+  system("cls")
+  c = Cart.new
+  puts c.add_product
+rescue InputError => e
+  puts e
+end
